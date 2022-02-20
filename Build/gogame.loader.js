@@ -1212,18 +1212,11 @@ Module.UnityCache = function () {
   return new Promise(function (resolve, reject) {
     if (!Module.SystemInfo.hasWebGL) {
       reject("Your browser does not support WebGL.");
-    } else if (Module.SystemInfo.hasWebGL == 1) {
-      var msg = "Your browser does not support graphics API \"WebGL 2\" which is required for this content.";
-      if (Module.SystemInfo.browser == 'Safari' && parseInt(Module.SystemInfo.browserVersion) < 15) {
-        if (Module.SystemInfo.mobile || navigator.maxTouchPoints > 1)
-          msg += "\nUpgrade to iOS 15 or later.";
-        else
-          msg += "\nUpgrade to Safari 15 or later.";
-      }
-      reject(msg);
     } else if (!Module.SystemInfo.hasWasm) {
       reject("Your browser does not support WebAssembly.");
     } else {
+      if (Module.SystemInfo.hasWebGL == 1)
+        Module.print("Warning: Your browser does not support \"WebGL 2\" Graphics API, switching to \"WebGL 1\"");
       Module.startupErrorHandler = reject;
       onProgress(0);
       Module.postRun.push(function () {
